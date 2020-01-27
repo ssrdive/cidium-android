@@ -14,8 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ContractDetailsActivity"></activity>
-        <activity android:name=".ReceiptActivity" />
+        <activity android:name=".OfflineReceiptsActivity" android:parentActivityName=".DashboardActivity"></activity>
+        <activity
+            android:name=".ContractDetailsActivity"
+            android:parentActivityName=".DashboardActivity" />
+        <activity
+            android:name=".ReceiptActivity"
+            android:parentActivityName=".DashboardActivity" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

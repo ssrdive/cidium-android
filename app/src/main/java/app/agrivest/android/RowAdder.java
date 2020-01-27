@@ -33,9 +33,9 @@ public class RowAdder {
             TextView textView = new TextView(context);
             String columnValue = contractColumn.getValue().toString();
 
-            if (!contractColumn.getKey().equals("0") && (contractColumn.getKey().equals("amount_pending") || contractColumn.getKey().equals("total_payable") || contractColumn.getKey().equals("total_agreement") || contractColumn.getKey().equals("total_paid"))) {
+            if (contractColumn.getKey().equals("amount_pending") || contractColumn.getKey().equals("total_payable") || contractColumn.getKey().equals("total_agreement") || contractColumn.getKey().equals("total_paid")) {
                 double amount = Double.parseDouble(contractColumn.getValue().toString());
-                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                NumberFormatter formatter = new NumberFormatter();
 
                 columnValue = formatter.format(amount);
             }
@@ -52,6 +52,8 @@ public class RowAdder {
             if (contractColumn.getKey().equals("id") || contractColumn.getKey().equals("total_payable")) {
                 final String id = contract.get("id");
                 final String customer_name = contract.get("customer_name");
+                final String model = contract.get("model");
+                final String customer_contact = contract.get("customer_contact");
                 final String chassis_number = contract.get("chassis_number");
                 final String amount_pending = contract.get("amount_pending");
                 final String total_payable = contract.get("total_payable");
@@ -65,6 +67,8 @@ public class RowAdder {
                         Intent intent = (columnKey.equals("id")) ? new Intent(context, ContractDetailsActivity.class) : new Intent(context, ReceiptActivity.class);
                         intent.putExtra("id", id);
                         intent.putExtra("customer_name", customer_name);
+                        intent.putExtra("model", model);
+                        intent.putExtra("customer_contact", customer_contact);
                         intent.putExtra("chassis_number", chassis_number);
                         intent.putExtra("amount_pending", amount_pending);
                         intent.putExtra("total_payable", total_payable);

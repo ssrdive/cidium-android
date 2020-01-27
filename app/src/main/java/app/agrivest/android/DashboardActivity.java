@@ -3,26 +3,19 @@ package app.agrivest.android;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,16 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -114,6 +98,11 @@ public class DashboardActivity extends AppCompatActivity {
 
         final RowAdder rowAdder = new RowAdder(this);
         if (connected) {
+            final Cursor res = db.rawQuery("SELECT * FROM " + SQLiteHelper.RECEIPT_TABLE_NAME, null);
+            boolean valid = res.moveToFirst();
+            if (valid)
+                uploadReceipt(db, res);
+
             loadContractsDialog.setTitle("Loading Contracts From Server");
             loadContractsDialog.setMessage("Please wait while contracts are loaded");
             loadContractsDialog.setCancelable(false);
@@ -124,7 +113,7 @@ public class DashboardActivity extends AppCompatActivity {
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    SetResponseContracts setResponseContracts = new SetResponseContracts(getApplicationContext(), db, response, contracts_TL, loadContractsDialog);
+                    SetResponseContractsThread setResponseContractsThread = new SetResponseContractsThread(getApplicationContext(), db, response, contracts_TL, loadContractsDialog);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -149,7 +138,66 @@ public class DashboardActivity extends AppCompatActivity {
             loadContractsDialog.setMessage("Please wait while contracts are loaded");
             loadContractsDialog.setCancelable(false);
             loadContractsDialog.show();
-            LoadLocalContracts loadLocalContracts = new LoadLocalContracts(this, db, contracts_TL, loadContractsDialog);
+            LoadLocalContractsThread loadLocalContractsThread = new LoadLocalContractsThread(this, db, contracts_TL, loadContractsDialog);
         }
+    }
+
+    public void uploadReceipt(final SQLiteDatabase db, final Cursor res) {
+        String url = "https://agrivest.app/api/contract/receipt";
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                db.delete(SQLiteHelper.RECEIPT_TABLE_NAME, "id = ?", new String[]{res.getString(res.getColumnIndex("id"))});
+                res.moveToNext();
+                if(res.isAfterLast() == false)
+                    uploadReceipt(db, res);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("cid", res.getString(res.getColumnIndex("contract_id")));
+                params.put("user_id", res.getString(res.getColumnIndex("user_id")));
+                params.put("amount", res.getString(res.getColumnIndex("amount")));
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Bearer " + userDetails.getString("token", ""));
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        mQueue.add(request);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.offline_receipts:
+                Intent intent = new Intent(getApplicationContext(), OfflineReceiptsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.sign_out:
+                signOut();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

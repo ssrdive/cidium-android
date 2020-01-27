@@ -11,7 +11,7 @@ import android.widget.TableRow;
 
 import java.util.LinkedHashMap;
 
-public class LoadLocalContracts implements Runnable {
+public class LoadLocalContractsThread implements Runnable {
     Thread thrd;
     Context context;
     SQLiteDatabase db;
@@ -19,7 +19,7 @@ public class LoadLocalContracts implements Runnable {
     ProgressDialog progressDialog;
     RowAdder rowAdder;
 
-    LoadLocalContracts(Context context, SQLiteDatabase db, TableLayout table, ProgressDialog progressDialog) {
+    LoadLocalContractsThread(Context context, SQLiteDatabase db, TableLayout table, ProgressDialog progressDialog) {
         this.context = context;
         this.db = db;
         this.table = table;
@@ -35,10 +35,6 @@ public class LoadLocalContracts implements Runnable {
         Cursor res = db.rawQuery("SELECT * FROM " + SQLiteHelper.CONTRACT_TABLE_NAME, null);
         res.moveToFirst();
         while (res.isAfterLast() == false) {
-            final TableRow contractRow = new TableRow(context);
-            contractRow.setBackgroundColor(Color.parseColor("#d5f0dc"));
-            contractRow.setPadding(5, 5, 5, 5);
-
             final LinkedHashMap<String, String> contractMap = new LinkedHashMap<String, String>();
             for (final String column : res.getColumnNames()) {
                 contractMap.put(column, res.getString(res.getColumnIndex(column)));
@@ -52,6 +48,7 @@ public class LoadLocalContracts implements Runnable {
             mainHandler.post(myRunnable);
             res.moveToNext();
         }
+        db.close();
         progressDialog.dismiss();
     }
 }

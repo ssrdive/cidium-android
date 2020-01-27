@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 public class SQLiteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "agrivest.db";
+
     public static final String CONTRACT_TABLE_NAME = "contract";
     public static final String CONTRACT_COLUMN_ID = "id";
     public static final String CONTRACT_COLUMN_STATE = "state";
@@ -21,10 +22,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String CONTRACT_COLUMN_TOTAL_AGREEMENT = "total_agreement";
     public static final String CONTRACT_COLUMN_TOTAL_PAID = "total_paid";
 
+    public static final String RECEIPT_TABLE_NAME = "receipt";
+    public static final String RECEIPT_COLUMN_ID = "id";
+    public static final String RECEIPT_CONTRACT_ID = "contract_id";
+    public static final String RECEIPT_CUSTOMER_NAME = "customer_name";
+    public static final String RECEIPT_USER_ID = "user_id";
+    public static final String RECEIPT_AMOUNT = "amount";
+
     public SQLiteHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -39,11 +46,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 CONTRACT_COLUMN_TOTAL_PAYABLE + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_AGREEMENT + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_PAID + " TEXT " + ")");
+        db.execSQL("CREATE TABLE " + RECEIPT_TABLE_NAME + "(" +
+                RECEIPT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                RECEIPT_CONTRACT_ID + " INTEGER, " +
+                RECEIPT_CUSTOMER_NAME + " TEXT, " +
+                RECEIPT_USER_ID + " INTEGER, " +
+                RECEIPT_AMOUNT + " INTEGER" + ")");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + CONTRACT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RECEIPT_TABLE_NAME);
         onCreate(db);
     }
 }

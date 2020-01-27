@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -47,13 +48,16 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
         amount_pending = Float.parseFloat(bundle.getString("amount_pending"));
         total_payable = Float.parseFloat(bundle.getString("total_payable"));
 
+        getSupportActionBar().setTitle("Issue Receipt " + id);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         id_TV = findViewById(R.id.id_TV);
         customer_name_TV = findViewById(R.id.customer_name_TV);
         chassis_number_TV = findViewById(R.id.chassis_number_TV);
         amount_pending_TV = findViewById(R.id.amount_pending_TV);
         total_payable_TV = findViewById(R.id.total_payable_TV);
 
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        NumberFormatter formatter = new NumberFormatter();
 
         id_TV.setText(id);
         customer_name_TV.setText(customer_name);
@@ -75,9 +79,25 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.issue_receipt_BT:
+                amount_ET = findViewById(R.id.amount_ET);
+                String amount = amount_ET.getText().toString();
+                if (amount.equals("") || Float.parseFloat(amount) == 0) {
+                    printReceiptStatus = new AlertDialog.Builder(this).create();
+                    printReceiptStatus.setTitle("Invalid receipt amount");
+                    printReceiptStatus.setMessage("Please enter a valid receipt amount");
+                    printReceiptStatus.setIcon( R.drawable.failure_icon);
+                    printReceiptStatus.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    printReceiptStatus.show();
+                    return;
+                }
                 loadContractsDialog = new ProgressDialog(ReceiptActivity.this);
                 printReceiptStatus = new AlertDialog.Builder(ReceiptActivity.this).create();
-                amount_ET = findViewById(R.id.amount_ET);
                 loadContractsDialog.setTitle("Issuing receipt");
                 loadContractsDialog.setMessage("Please wait while the receipt is issued");
                 loadContractsDialog.setCancelable(false);
@@ -86,8 +106,8 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                 receiptDetails.put("id", id);
                 receiptDetails.put("customer_name", customer_name);
                 receiptDetails.put("chassis_number", chassis_number);
-                receiptDetails.put("amount", amount_ET.getText().toString());
-                IssueReceipt issueReceipt = new IssueReceipt(this, loadContractsDialog, receiptDetails);
+                receiptDetails.put("amount", amount);
+                IssueReceiptThread issueReceiptThread = new IssueReceiptThread(this, loadContractsDialog, receiptDetails);
                 break;
         }
     }

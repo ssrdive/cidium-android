@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -35,7 +37,7 @@ import jpos.POSPrinter;
 import jpos.POSPrinterConst;
 import jpos.config.JposEntry;
 
-public class IssueReceipt implements Runnable {
+public class IssueReceiptThread implements Runnable {
     Thread thrd;
     Context context;
     ProgressDialog progressDialog;
@@ -44,9 +46,9 @@ public class IssueReceipt implements Runnable {
     AlertDialog printReceiptStatus;
     Handler mainHandler;
     SharedPreferences userDetails;
-    private RequestQueue mQueue;
+    RequestQueue mQueue;
 
-    IssueReceipt(Context context, ProgressDialog progressDialog, HashMap<String, String> receiptDetails) {
+    IssueReceiptThread(Context context, ProgressDialog progressDialog, HashMap<String, String> receiptDetails) {
         this.context = context;
         this.progressDialog = progressDialog;
         this.receiptDetails = receiptDetails;
@@ -186,6 +188,7 @@ public class IssueReceipt implements Runnable {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    saveReceipt();
                     error.printStackTrace();
                 }
             }) {
@@ -209,11 +212,31 @@ public class IssueReceipt implements Runnable {
 
             mQueue.add(request);
         } else {
+            saveReceipt();
+        }
+    }
+
+    private void saveReceipt() {
+        SQLiteDatabase db = new SQLiteHelper(context).getReadableDatabase();
+        ContentValues receiptValues = new ContentValues();
+        receiptValues.put(SQLiteHelper.RECEIPT_CONTRACT_ID, receiptDetails.get("id"));
+        receiptValues.put(SQLiteHelper.RECEIPT_CUSTOMER_NAME, receiptDetails.get("customer_name"));
+        receiptValues.put(SQLiteHelper.RECEIPT_USER_ID, userDetails.getString("id", ""));
+        receiptValues.put(SQLiteHelper.RECEIPT_AMOUNT, receiptDetails.get("amount"));
+        long id = db.insert(SQLiteHelper.RECEIPT_TABLE_NAME, null, receiptValues);
+        if (id != -1) {
             showMessage(
                     "success",
                     "[OFFLINE] Receipt issued",
-                    "Please upload the receipt as soon as you connect to the internet"
+                    "Please connect to internet as soon as possible."
+            );
+        } else {
+            showMessage(
+                    "failure",
+                    "[OFFLINE] Receipt failed",
+                    "Failed to saved offline receipt data. Please contact system administrator immediately."
             );
         }
+        db.close();
     }
 }

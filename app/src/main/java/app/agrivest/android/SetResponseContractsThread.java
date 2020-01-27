@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public class SetResponseContracts implements Runnable {
+public class SetResponseContractsThread implements Runnable {
     Thread thrd;
     Context context;
     SQLiteDatabase db;
@@ -25,7 +25,7 @@ public class SetResponseContracts implements Runnable {
     ProgressDialog progressDialog;
     RowAdder rowAdder;
 
-    SetResponseContracts(Context context, SQLiteDatabase db, String response, TableLayout table, ProgressDialog progressDialog) {
+    SetResponseContractsThread(Context context, SQLiteDatabase db, String response, TableLayout table, ProgressDialog progressDialog) {
         this.context = context;
         this.db = db;
         this.response = response;
@@ -66,7 +66,6 @@ public class SetResponseContracts implements Runnable {
                 db.insert(SQLiteHelper.CONTRACT_TABLE_NAME, null, contractValues);
                 progressDialog.dismiss();
             }
-
         } catch (JSONException e) {
             progressDialog.dismiss();
             e.printStackTrace();
