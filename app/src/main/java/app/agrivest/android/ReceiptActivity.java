@@ -7,9 +7,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,13 +14,6 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
-
-import com.bxl.config.editor.BXLConfigLoader;
-
-import jpos.JposException;
-import jpos.config.JposEntry;
-import jpos.POSPrinter;
-import jpos.POSPrinterConst;
 
 public class ReceiptActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
@@ -97,7 +87,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                 receiptDetails.put("customer_name", customer_name);
                 receiptDetails.put("chassis_number", chassis_number);
                 receiptDetails.put("amount", amount_ET.getText().toString());
-                PrintReceipt printReceipt = new PrintReceipt(this, loadContractsDialog, receiptDetails);
+                IssueReceipt issueReceipt = new IssueReceipt(this, loadContractsDialog, receiptDetails);
                 break;
         }
     }
