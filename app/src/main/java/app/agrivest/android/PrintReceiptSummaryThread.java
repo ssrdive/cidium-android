@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,6 +22,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bxl.config.editor.BXLConfigLoader;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,29 +33,26 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import android.os.Handler;
-
 import jpos.JposConst;
 import jpos.JposException;
 import jpos.POSPrinter;
 import jpos.POSPrinterConst;
 import jpos.config.JposEntry;
 
-public class IssueReceiptThread implements Runnable {
+public class PrintReceiptSummaryThread implements Runnable {
     Thread thrd;
     Context context;
     ProgressDialog progressDialog;
-    HashMap<String, String> receiptDetails;
+    JSONArray receipts;
     Utils utils;
     AlertDialog printReceiptStatus;
     Handler mainHandler;
     SharedPreferences userDetails;
-    RequestQueue mQueue;
 
-    IssueReceiptThread(Context context, ProgressDialog progressDialog, HashMap<String, String> receiptDetails) {
+    PrintReceiptSummaryThread(Context context, ProgressDialog progressDialog, JSONArray receipts) {
         this.context = context;
         this.progressDialog = progressDialog;
-        this.receiptDetails = receiptDetails;
+        this.receipts = receipts;
         utils = new Utils();
         thrd = new Thread(this);
         thrd.start();
@@ -81,6 +83,16 @@ public class IssueReceiptThread implements Runnable {
     @Override
     public void run() {
         mainHandler = new Handler(context.getMainLooper());
+
+        if(receipts == null || receipts.length() == 0) {
+            progressDialog.dismiss();
+            showMessage(
+                    "Failure",
+                    "No receipts issued",
+                    "You do not have any receipts issued today."
+            );
+            return;
+        }
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> bondedDeviceSet = bluetoothAdapter.getBondedDevices();
@@ -147,6 +159,7 @@ public class IssueReceiptThread implements Runnable {
         }
 
         try {
+            userDetails = context.getSharedPreferences("user_details", context.MODE_PRIVATE);
             POSPrinter posPrinter = new POSPrinter(context);
             posPrinter.open(BXLConfigLoader.PRODUCT_NAME_SPP_R210);
             posPrinter.claim(5000);
@@ -167,30 +180,45 @@ public class IssueReceiptThread implements Runnable {
             NumberFormatter numberFormatter = new NumberFormatter();
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
                     + "________________________________\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "bC" + ESCAPE_CHARACTERS + "cA" + "OFFICIAL RECEIPT" + "\n\n");
+            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "bC" + ESCAPE_CHARACTERS + "cA" + "RECEIPT SUMMARY" + "\n\n");
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
-                    + java.text.DateFormat.getDateTimeInstance().format(new Date()) + "\n"
-                    + "C/ID: " + receiptDetails.get("id") + "\n"
-                    + receiptDetails.get("customer_name") + " (" + receiptDetails.get("customer_contact") + ")" + "\n"
-                    + "Chassis: " + receiptDetails.get("chassis_number") + "\n"
-                    + "Total Payable: RS. "
-                    + numberFormatter.format(receiptDetails.get("total_payable")) + "\n"
-                    + "Arrears: RS. "
-                    + numberFormatter.format(receiptDetails.get("amount_pending")) + "\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Recieved sum of" + "\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "4C" + ESCAPE_CHARACTERS + "cA" + "RS " + numberFormatter.format(receiptDetails.get("amount")) + "\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Thank You!" + "\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "bC" + ESCAPE_CHARACTERS + "lA" + "Disclaimer:" + "\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "lA"
-                    + "THIS RECEIPT IS ALSO VALID FOR CONTRACTS WITH CORRESPONDING PRESCRIBED CHASSIS NUMBER THAT WAS SIGNED WITH RANDEEPA AGRARIAN (PRIVATE) LIMITED." + "\n");
-            ByteBuffer buffer2 = ByteBuffer.allocate(4);
-            buffer2.put((byte) POSPrinterConst.PTR_S_RECEIPT);
-            buffer2.put((byte) 20);
-            buffer2.put((byte) 0x01);
-            buffer2.put((byte) 0x00);
-            posPrinter.printBitmap(buffer2.getInt(0), payment_confirmation_customer_information, 384, POSPrinterConst.PTR_BM_CENTER);
+                    + java.text.DateFormat.getDateTimeInstance().format(new Date()) + "\n" + userDetails.getString("name", "") + "\n\n");
+
+            try {
+                double total = 0;
+                for (int i = 0; i < receipts.length(); i++) {
+                    JSONObject receipt = receipts.getJSONObject(i);
+                    float amount = Float.parseFloat(receipt.getString("amount"));
+                    total += amount;
+                    posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
+                            + receipt.getString("id") + "\tRS. " + numberFormatter.format(amount) + "\n");
+                }
+                posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA"
+                        + "\nTotal\n");
+                posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "4C" + ESCAPE_CHARACTERS + "cA"
+                        + "RS. " + numberFormatter.format(total) + "\n\n\n");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, "\n\n\n");
+                posPrinter.close();
+                progressDialog.dismiss();
+                showMessage(
+                        "Failure",
+                        "Something went wrong",
+                        "Something went wrong."
+                );
+                return;
+            }
+
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, "\n\n\n");
             posPrinter.close();
+            progressDialog.dismiss();
+            showMessage(
+                    "success",
+                    "Printed",
+                    "Receipt summary printed."
+            );
+            return;
         } catch (JposException e) {
             e.printStackTrace();
             showMessage(
@@ -202,74 +230,6 @@ public class IssueReceiptThread implements Runnable {
                             "3. Paper roll not empty\n" +
                             "4. Paper cover closed"
             );
-            return;
         }
-
-        userDetails = context.getSharedPreferences("user_details", context.MODE_PRIVATE);
-        if (utils.isInternetAvailable(context)) {
-            mQueue = Volley.newRequestQueue(context);
-            String url = "https://agrivest.app/api/contract/receipt";
-            StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    showMessage(
-                            "success",
-                            "[ONLINE] Receipt issued",
-                            "Receipt number is " + response
-                    );
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    saveReceipt();
-                    error.printStackTrace();
-                }
-            }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("cid", receiptDetails.get("id"));
-                    params.put("user_id", userDetails.getString("id", ""));
-                    params.put("amount", receiptDetails.get("amount"));
-                    return params;
-                }
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("Authorization", "Bearer " + userDetails.getString("token", ""));
-                    params.put("Content-Type", "application/x-www-form-urlencoded");
-                    return params;
-                }
-            };
-
-            mQueue.add(request);
-        } else {
-            saveReceipt();
-        }
-    }
-
-    private void saveReceipt() {
-        SQLiteDatabase db = new SQLiteHelper(context).getReadableDatabase();
-        ContentValues receiptValues = new ContentValues();
-        receiptValues.put(SQLiteHelper.RECEIPT_CONTRACT_ID, receiptDetails.get("id"));
-        receiptValues.put(SQLiteHelper.RECEIPT_CUSTOMER_NAME, receiptDetails.get("customer_name"));
-        receiptValues.put(SQLiteHelper.RECEIPT_USER_ID, userDetails.getString("id", ""));
-        receiptValues.put(SQLiteHelper.RECEIPT_AMOUNT, receiptDetails.get("amount"));
-        long id = db.insert(SQLiteHelper.RECEIPT_TABLE_NAME, null, receiptValues);
-        if (id != -1) {
-            showMessage(
-                    "success",
-                    "[OFFLINE] Receipt issued",
-                    "Please connect to internet as soon as possible."
-            );
-        } else {
-            showMessage(
-                    "failure",
-                    "[OFFLINE] Receipt failed",
-                    "Failed to saved offline receipt data. Please contact system administrator immediately."
-            );
-        }
-        db.close();
     }
 }

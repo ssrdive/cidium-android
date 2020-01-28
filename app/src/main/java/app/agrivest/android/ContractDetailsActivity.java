@@ -2,12 +2,35 @@ package app.agrivest.android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ContractDetailsActivity extends AppCompatActivity {
     TextView id_TV;
@@ -17,6 +40,17 @@ public class ContractDetailsActivity extends AppCompatActivity {
     TextView total_payable_TV;
     TextView chassis_number_TV;
     TextView contact_TV;
+
+    Utils utils;
+
+    private ProgressDialog loadReceipts;
+    private ProgressDialog loadInstallments;
+
+    private SharedPreferences userDetails;
+    private RequestQueue mQueue;
+
+    TableLayout receiptsTable;
+    TableLayout installmentsTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,5 +96,121 @@ public class ContractDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Contract Details " + id);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        utils = new Utils();
+        userDetails = this.getSharedPreferences("user_details", MODE_PRIVATE);
+        mQueue = Volley.newRequestQueue(this);
+        receiptsTable = findViewById(R.id.receipts_TL);
+        installmentsTable = findViewById(R.id.installments_TL);
+        loadReceipts(id);
+        loadInstallments(id);
+    }
+
+    private void loadReceipts(String id) {
+        if(utils.isInternetAvailable(this)) {
+            loadReceipts = new ProgressDialog(this);
+            loadReceipts.setTitle("Loading receipts");
+            loadReceipts.setMessage("Please wait while receipts are loaded");
+            loadReceipts.setCancelable(false);
+            String url = "https://agrivest.app/api/contract/receipts/" + id;
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONArray installments = new JSONArray(response);
+                        RowAdder rowAdder = new RowAdder(getApplicationContext());
+                        for (int i = 0; i < installments.length(); i++) {
+                            JSONObject installment = installments.getJSONObject(i);
+                            Iterator<String> installmentIterator = installment.keys();
+                            String tableExp[] = {};
+                            final LinkedHashMap<String, String> contractMap = new LinkedHashMap<String, String>();
+                            while (installmentIterator.hasNext()) {
+                                String key = installmentIterator.next();
+                                if (!Arrays.asList(tableExp).contains(key)) {
+                                    if(key.equals("notes")) {
+                                        contractMap.put(key, new JSONObject(installment.getString(key)).getString("String"));
+                                    } else {
+                                        contractMap.put(key, installment.getString(key));
+                                    }
+                                }
+                            }
+                            rowAdder.receipt(receiptsTable, contractMap);
+                        }
+                        loadReceipts.dismiss();
+                    } catch (JSONException e) {
+                        loadReceipts.dismiss();
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    loadReceipts.dismiss();
+                    error.printStackTrace();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Authorization", "Bearer " + userDetails.getString("token", ""));
+                    params.put("Content-Type", "application/x-www-form-urlencoded");
+                    return params;
+                }
+            };
+
+            mQueue.add(request);
+        }
+    }
+
+    private void loadInstallments(String id) {
+        if(utils.isInternetAvailable(this)) {
+            loadInstallments = new ProgressDialog(this);
+            loadInstallments.setTitle("Loading Installments");
+            loadInstallments.setMessage("Please wait while installments are loaded");
+            loadInstallments.setCancelable(false);
+            String url = "https://agrivest.app/api/contract/installments/" + id;
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONArray installments = new JSONArray(response);
+                        RowAdder rowAdder = new RowAdder(getApplicationContext());
+                        for (int i = 0; i < installments.length(); i++) {
+                            JSONObject installment = installments.getJSONObject(i);
+                            Iterator<String> installmentIterator = installment.keys();
+                            String tableExp[] = {"id"};
+                            final LinkedHashMap<String, String> contractMap = new LinkedHashMap<String, String>();
+                            while (installmentIterator.hasNext()) {
+                                String key = installmentIterator.next();
+                                if (!Arrays.asList(tableExp).contains(key)) {
+                                    contractMap.put(key, installment.getString(key));
+                                }
+                            }
+                            rowAdder.installment(installmentsTable, contractMap);
+                        }
+                        loadInstallments.dismiss();
+                    } catch (JSONException e) {
+                        loadInstallments.dismiss();
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    loadInstallments.dismiss();
+                    error.printStackTrace();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Authorization", "Bearer " + userDetails.getString("token", ""));
+                    params.put("Content-Type", "application/x-www-form-urlencoded");
+                    return params;
+                }
+            };
+
+            mQueue.add(request);
+        }
     }
 }

@@ -155,6 +155,9 @@ public class DashboardActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                res.moveToNext();
+                if(res.isAfterLast() == false)
+                    uploadReceipt(db, res);
                 error.printStackTrace();
             }
         }) {
@@ -187,9 +190,14 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.offline_receipts:
-                Intent intent = new Intent(getApplicationContext(), OfflineReceiptsActivity.class);
+                intent = new Intent(getApplicationContext(), OfflineReceiptsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.issued_receipts:
+                intent = new Intent(getApplicationContext(), IssuedReceiptsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.sign_out:

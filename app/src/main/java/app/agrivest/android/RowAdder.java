@@ -65,6 +65,7 @@ public class RowAdder {
                     @Override
                     public void onClick(View v) {
                         Intent intent = (columnKey.equals("id")) ? new Intent(context, ContractDetailsActivity.class) : new Intent(context, ReceiptActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("id", id);
                         intent.putExtra("customer_name", customer_name);
                         intent.putExtra("model", model);
@@ -96,6 +97,72 @@ public class RowAdder {
             } else {
                 contractRow.addView(textView);
             }
+        }
+
+        table.addView(contractRow);
+    }
+
+    public void receipt(TableLayout table, LinkedHashMap<String, String> contract) {
+        TableRow contractRow = new TableRow(context);
+        contractRow.setBackgroundColor(Color.parseColor("#d5f0dc"));
+        contractRow.setPadding(5, 5, 5, 5);
+
+        Iterator contractIterator = contract.entrySet().iterator();
+        while (contractIterator.hasNext()) {
+            Map.Entry contractColumn = (Map.Entry) contractIterator.next();
+            Button btn = new Button(context);
+            TextView textView = new TextView(context);
+            String columnValue = contractColumn.getValue().toString();
+
+            if (contractColumn.getKey().equals("amount")) {
+                double amount = Double.parseDouble(contractColumn.getValue().toString());
+                NumberFormatter formatter = new NumberFormatter();
+
+                columnValue = formatter.format(amount);
+                textView.setTextColor(Color.parseColor("#0672c9"));
+                textView.setTypeface(null, Typeface.BOLD);
+            }
+
+            textView.setText(columnValue);
+            textView.setPadding(10, 10, 10, 10);
+            contractRow.addView(textView);
+        }
+
+        table.addView(contractRow);
+    }
+
+    public void installment(TableLayout table, LinkedHashMap<String, String> contract) {
+        TableRow contractRow = new TableRow(context);
+        contractRow.setBackgroundColor(Color.parseColor("#d5f0dc"));
+        contractRow.setPadding(5, 5, 5, 5);
+
+        Iterator contractIterator = contract.entrySet().iterator();
+        while (contractIterator.hasNext()) {
+            Map.Entry contractColumn = (Map.Entry) contractIterator.next();
+            Button btn = new Button(context);
+            TextView textView = new TextView(context);
+            String columnValue = contractColumn.getValue().toString();
+
+            if (contractColumn.getKey().equals("installment") || contractColumn.getKey().equals("installment_paid")) {
+                double amount = Double.parseDouble(contractColumn.getValue().toString());
+                NumberFormatter formatter = new NumberFormatter();
+
+                columnValue = formatter.format(amount);
+            }
+
+            if (contractColumn.getKey().equals("installment_paid")) {
+                if(contract.get("installment").equals(contract.get("installment_paid"))) {
+                    textView.setTextColor(Color.parseColor("#196912"));
+                } else {
+                    if (Integer.parseInt(contract.get("due_in")) <= 0)
+                        textView.setTextColor(Color.parseColor("#b03428"));
+                }
+                textView.setTypeface(null, Typeface.BOLD);
+            }
+
+            textView.setText(columnValue);
+            textView.setPadding(10, 10, 10, 10);
+            contractRow.addView(textView);
         }
 
         table.addView(contractRow);

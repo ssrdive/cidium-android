@@ -64,8 +64,8 @@ public class SetResponseContractsThread implements Runnable {
                 };
                 mainHandler.post(myRunnable);
                 db.insert(SQLiteHelper.CONTRACT_TABLE_NAME, null, contractValues);
-                progressDialog.dismiss();
             }
+            progressDialog.dismiss();
         } catch (JSONException e) {
             progressDialog.dismiss();
             e.printStackTrace();
