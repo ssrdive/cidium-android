@@ -7,11 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "agrivest.db";
 
     public static final String CONTRACT_TABLE_NAME = "contract";
     public static final String CONTRACT_COLUMN_ID = "id";
+    public static final String CONTRACT_COLUMN_AGRIVEST = "agrivest";
     public static final String CONTRACT_COLUMN_STATE = "state";
     public static final String CONTRACT_COLUMN_MODEL = "model";
     public static final String CONTRACT_COLUMN_CHASSIS_NUMBER = "chassis_number";
@@ -37,6 +38,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + CONTRACT_TABLE_NAME + "(" +
                 CONTRACT_COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                CONTRACT_COLUMN_AGRIVEST + " TEXT, " +
                 CONTRACT_COLUMN_STATE + " TEXT, " +
                 CONTRACT_COLUMN_MODEL + " TEXT, " +
                 CONTRACT_COLUMN_CHASSIS_NUMBER + " TEXT, " +

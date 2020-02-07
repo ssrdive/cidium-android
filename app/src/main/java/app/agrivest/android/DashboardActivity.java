@@ -23,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
         network_status_message = findViewById(R.id.network_status_message);
         if (connected) {
             network_status_message.setTextColor(Color.parseColor("#21634b"));
-            network_status_message.setText("Connected! You are seeing real-time data");
+            network_status_message.setText("Connected! Updated " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
         } else {
             network_status_message.setTextColor(Color.parseColor("#948b23"));
             network_status_message.setText("Disconnected! You are seeing data that was cached when you were last connected");

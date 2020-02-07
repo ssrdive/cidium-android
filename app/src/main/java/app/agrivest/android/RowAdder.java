@@ -51,6 +51,7 @@ public class RowAdder {
 
             if (contractColumn.getKey().equals("id") || contractColumn.getKey().equals("total_payable")) {
                 final String id = contract.get("id");
+                final String agrivest = contract.get("agrivest");
                 final String customer_name = contract.get("customer_name");
                 final String model = contract.get("model");
                 final String customer_contact = contract.get("customer_contact");
@@ -67,6 +68,7 @@ public class RowAdder {
                         Intent intent = (columnKey.equals("id")) ? new Intent(context, ContractDetailsActivity.class) : new Intent(context, ReceiptActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("id", id);
+                        intent.putExtra("agrivest", agrivest);
                         intent.putExtra("customer_name", customer_name);
                         intent.putExtra("model", model);
                         intent.putExtra("customer_contact", customer_contact);
@@ -92,10 +94,14 @@ public class RowAdder {
 
             textView.setText(columnValue);
             textView.setPadding(10, 10, 10, 10);
-            if (contractColumn.getKey().equals("id") || contractColumn.getKey().equals("total_payable")) {
-                contractRow.addView(btn);
+            if (contractColumn.getKey().equals("agrivest")) {
+
             } else {
-                contractRow.addView(textView);
+                if (contractColumn.getKey().equals("id") || contractColumn.getKey().equals("total_payable")) {
+                    contractRow.addView(btn);
+                } else {
+                    contractRow.addView(textView);
+                }
             }
         }
 
