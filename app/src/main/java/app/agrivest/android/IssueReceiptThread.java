@@ -159,11 +159,21 @@ public class IssueReceiptThread implements Runnable {
             buffer.put((byte) 0x00);
             Bitmap logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
             Bitmap payment_confirmation_customer_information = BitmapFactory.decodeResource(context.getResources(), R.drawable.payment_confirmation_customer_information);
+
+            String address = "\nAgrivest (Private) Limited\n" +
+                    "Hospital Junction, Polonnaruwa\n " +
+                    "027 222 22279\n";
+
+            if(receiptDetails.get("agrivest").equals("0")) {
+                logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.randeepa_logo);
+                address = "\nRandeepa Agrarian (Pvt) Limited\n" +
+                        "Sirisangabo Place, Polonnaruwa\n " +
+                        "027 222 22279\n";
+            }
+
             posPrinter.printBitmap(buffer.getInt(0), logo, 200, POSPrinterConst.PTR_BM_CENTER);
             String ESCAPE_CHARACTERS = new String(new byte[]{0x1b, 0x7c});
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "\nAgrivest (Private) Limited\n" +
-                    "Hospital Junction, Polonnaruwa\n " +
-                    "027 222 22279\n");
+            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + address);
             NumberFormatter numberFormatter = new NumberFormatter();
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
                     + "________________________________\n\n");
@@ -180,9 +190,6 @@ public class IssueReceiptThread implements Runnable {
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Recieved sum of" + "\n");
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "4C" + ESCAPE_CHARACTERS + "cA" + "RS " + numberFormatter.format(receiptDetails.get("amount")) + "\n");
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Thank You!" + "\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "bC" + ESCAPE_CHARACTERS + "lA" + "Disclaimer:" + "\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "lA"
-                    + "THIS RECEIPT IS ALSO VALID FOR CONTRACTS WITH CORRESPONDING PRESCRIBED CHASSIS NUMBER THAT WAS SIGNED WITH RANDEEPA AGRARIAN (PRIVATE) LIMITED." + "\n");
             ByteBuffer buffer2 = ByteBuffer.allocate(4);
             buffer2.put((byte) POSPrinterConst.PTR_S_RECEIPT);
             buffer2.put((byte) 20);

@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 public class ReceiptActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
+    private String agrivest;
     private String customer_name;
     private String customer_contact;
     private String chassis_number;
@@ -44,6 +45,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
 
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
+        agrivest = bundle.getString("agrivest");
         customer_name = bundle.getString("customer_name");
         customer_contact = bundle.getString("customer_contact");
         chassis_number = bundle.getString("chassis_number");
@@ -113,6 +115,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                         loadContractsDialog.show();
                         HashMap<String, String> receiptDetails = new HashMap<String, String>();
                         receiptDetails.put("id", id);
+                        receiptDetails.put("agrivest", agrivest);
                         receiptDetails.put("customer_name", customer_name);
                         receiptDetails.put("customer_contact", customer_contact);
                         receiptDetails.put("chassis_number", chassis_number);
