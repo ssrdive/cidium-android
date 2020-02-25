@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import android.os.Handler;
+import android.util.Log;
 
 import jpos.JposConst;
 import jpos.JposException;
@@ -238,6 +240,11 @@ public class IssueReceiptThread implements Runnable {
                     params.put("cid", receiptDetails.get("id"));
                     params.put("user_id", userDetails.getString("id", ""));
                     params.put("amount", receiptDetails.get("amount"));
+                    if(receiptDetails.get("payment_type").equals("Cash")) {
+                        params.put("due_date", "");
+                    } else {
+                        params.put("due_date", receiptDetails.get("due_date"));
+                    }
                     return params;
                 }
 
@@ -249,7 +256,7 @@ public class IssueReceiptThread implements Runnable {
                     return params;
                 }
             };
-
+            request.setRetryPolicy(new DefaultRetryPolicy(10000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             mQueue.add(request);
         } else {
             saveReceipt();
@@ -263,6 +270,8 @@ public class IssueReceiptThread implements Runnable {
         receiptValues.put(SQLiteHelper.RECEIPT_CUSTOMER_NAME, receiptDetails.get("customer_name"));
         receiptValues.put(SQLiteHelper.RECEIPT_USER_ID, userDetails.getString("id", ""));
         receiptValues.put(SQLiteHelper.RECEIPT_AMOUNT, receiptDetails.get("amount"));
+        receiptValues.put(SQLiteHelper.RECEIPT_PAYMENT_TYPE, receiptDetails.get("payment_type"));
+        receiptValues.put(SQLiteHelper.RECEIPT_DUE_DATE, receiptDetails.get("due_date"));
         long id = db.insert(SQLiteHelper.RECEIPT_TABLE_NAME, null, receiptValues);
         if (id != -1) {
             showMessage(

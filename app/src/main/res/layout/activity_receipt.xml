@@ -173,6 +173,30 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Payment Mode" />
+
+            <Spinner
+                android:id="@+id/payment_method_SP"
+                android:layout_width="fill_parent"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/payment_types"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/due_date_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Due Date" />
+
+            <EditText
+                android:id="@+id/due_date_ET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Due Date" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Amount" />
 
             <EditText
