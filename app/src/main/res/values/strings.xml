@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Agrivest</string>
+    <string-array name="payment_types">
+        <item>Cash</item>
+        <item>Check</item>
+    </string-array>
 </resources>

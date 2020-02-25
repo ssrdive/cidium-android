@@ -27,6 +27,19 @@
                 android:text="Network status" />
 
             <TextView
+                android:id="@+id/last_updated_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Updated" />
+
+            <Button
+                android:id="@+id/refresh_contracts_BT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Refresh"
+            />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"

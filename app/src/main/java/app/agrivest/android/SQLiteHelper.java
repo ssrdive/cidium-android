@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "agrivest.db";
 
     public static final String CONTRACT_TABLE_NAME = "contract";
@@ -29,6 +29,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String RECEIPT_CUSTOMER_NAME = "customer_name";
     public static final String RECEIPT_USER_ID = "user_id";
     public static final String RECEIPT_AMOUNT = "amount";
+    public static final String RECEIPT_PAYMENT_TYPE = "payment_type";
+    public static final String RECEIPT_DUE_DATE = "due_date";
 
     public SQLiteHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,13 +55,17 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 RECEIPT_CONTRACT_ID + " INTEGER, " +
                 RECEIPT_CUSTOMER_NAME + " TEXT, " +
                 RECEIPT_USER_ID + " INTEGER, " +
-                RECEIPT_AMOUNT + " INTEGER" + ")");
+                RECEIPT_AMOUNT + " INTEGER, " +
+                RECEIPT_PAYMENT_TYPE + " TEXT, " +
+                RECEIPT_DUE_DATE + " TEXT " + ")");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + CONTRACT_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + RECEIPT_TABLE_NAME);
-        onCreate(db);
+        if(newVersion > oldVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + CONTRACT_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + RECEIPT_TABLE_NAME);
+            onCreate(db);
+        }
     }
 }

@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 userEditor.putString(key, signinRes.getString(key));
                         }
 
-                        userEditor.commit();
+                        userEditor.apply();
 
                         dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
                         startActivity(dashboard);
