@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -35,9 +36,10 @@ import java.util.Map;
 public class ContractDetailsActivity extends AppCompatActivity {
     TextView id_TV;
     TextView customer_name_TV;
+    TextView customer_address_TV;
     TextView model_TV;
     TextView amount_pending_TV;
-    TextView total_payable_TV;
+    Button total_payable_TV;
     TextView chassis_number_TV;
     TextView contact_TV;
 
@@ -58,24 +60,46 @@ public class ContractDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contract_details);
 
         Bundle bundle = getIntent().getExtras();
-        String id = bundle.getString("id");
-        String customer_name = bundle.getString("customer_name");
-        String model = bundle.getString("model");
+        final String id = bundle.getString("id");
+        final String agrivest = bundle.getString("agrivest");
+        final String customer_name = bundle.getString("customer_name");
+        final String customer_address = bundle.getString("customer_address");
+        final String model = bundle.getString("model");
         final String customer_contact = bundle.getString("customer_contact");
-        String chassis_number = bundle.getString("chassis_number");
-        String amount_pending = bundle.getString("amount_pending");
-        String total_payable = bundle.getString("total_payable");
+        final String chassis_number = bundle.getString("chassis_number");
+        final String amount_pending = bundle.getString("amount_pending");
+        final String total_payable = bundle.getString("total_payable");
 
         id_TV = findViewById(R.id.id_TV);
         customer_name_TV = findViewById(R.id.customer_name_TV);
+        customer_address_TV = findViewById(R.id.customer_address_TV);
         model_TV = findViewById(R.id.model_TV);
         contact_TV = findViewById(R.id.contact_TV);
         chassis_number_TV = findViewById(R.id.chassis_number_TV);
         amount_pending_TV = findViewById(R.id.amount_pending_TV);
         total_payable_TV = findViewById(R.id.total_payable_TV);
 
+        total_payable_TV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ReceiptActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("id", id);
+                intent.putExtra("agrivest", agrivest);
+                intent.putExtra("customer_name", customer_name);
+                intent.putExtra("customer_address", customer_address);
+                intent.putExtra("model", model);
+                intent.putExtra("customer_contact", customer_contact);
+                intent.putExtra("chassis_number", chassis_number);
+                intent.putExtra("amount_pending", amount_pending);
+                intent.putExtra("total_payable", total_payable);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
         id_TV.setText(id);
         customer_name_TV.setText(customer_name);
+        customer_address_TV.setText(customer_address);
         model_TV.setText(model);
         chassis_number_TV.setText(chassis_number);
 

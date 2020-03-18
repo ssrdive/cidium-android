@@ -195,7 +195,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                             Toast.makeText(getApplicationContext(), "Error uploading offline receipts. Please check the amounts and validate with the office", Toast.LENGTH_LONG).show();
                             break;
                         case 400:
-                            signOut();
+//                            signOut();
                             break;
                     }
                     Log.d("STATUS_CODE", String.valueOf(networkResponse.statusCode));

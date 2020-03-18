@@ -27,6 +27,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
     private String id;
     private String agrivest;
     private String customer_name;
+    private String customer_address;
     private String customer_contact;
     private String chassis_number;
     private float amount_pending;
@@ -34,6 +35,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView id_TV;
     private TextView customer_name_TV;
+    private TextView customer_address_TV;
     private TextView chassis_number_TV;
     private TextView amount_pending_TV;
     private TextView total_payable_TV;
@@ -61,6 +63,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
         id = bundle.getString("id");
         agrivest = bundle.getString("agrivest");
         customer_name = bundle.getString("customer_name");
+        customer_address = bundle.getString("customer_address");
         customer_contact = bundle.getString("customer_contact");
         chassis_number = bundle.getString("chassis_number");
         amount_pending = Float.parseFloat(bundle.getString("amount_pending"));
@@ -73,6 +76,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
 
         id_TV = findViewById(R.id.id_TV);
         customer_name_TV = findViewById(R.id.customer_name_TV);
+        customer_address_TV = findViewById(R.id.customer_address_TV);
         chassis_number_TV = findViewById(R.id.chassis_number_TV);
         amount_pending_TV = findViewById(R.id.amount_pending_TV);
         total_payable_TV = findViewById(R.id.total_payable_TV);
@@ -107,6 +111,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
 
         id_TV.setText(id);
         customer_name_TV.setText(customer_name);
+        customer_address_TV.setText(customer_address);
         chassis_number_TV.setText(chassis_number);
         amount_pending_TV.setText(formatter.format(amount_pending));
         if (amount_pending > 0) {

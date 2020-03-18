@@ -53,6 +53,7 @@ public class RowAdder {
                 final String id = contract.get("id");
                 final String agrivest = contract.get("agrivest");
                 final String customer_name = contract.get("customer_name");
+                final String customer_address = contract.get("customer_address");
                 final String model = contract.get("model");
                 final String customer_contact = contract.get("customer_contact");
                 final String chassis_number = contract.get("chassis_number");
@@ -70,6 +71,7 @@ public class RowAdder {
                         intent.putExtra("id", id);
                         intent.putExtra("agrivest", agrivest);
                         intent.putExtra("customer_name", customer_name);
+                        intent.putExtra("customer_address", customer_address);
                         intent.putExtra("model", model);
                         intent.putExtra("customer_contact", customer_contact);
                         intent.putExtra("chassis_number", chassis_number);
