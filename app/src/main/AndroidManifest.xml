@@ -24,7 +24,9 @@
         <activity
             android:name=".ReceiptActivity"
             android:parentActivityName=".DashboardActivity" />
-        <activity android:name=".DashboardActivity" />
+        <activity
+            android:name=".DashboardActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

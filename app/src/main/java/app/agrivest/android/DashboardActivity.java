@@ -97,8 +97,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         connected = utils.isInternetAvailable(getApplicationContext());
 
-        setNetworkStatusMessage();
-        uploadOfflineReceipts();
+//        setNetworkStatusMessage();
+//        uploadOfflineReceipts();
     }
 
     private void signOut() {

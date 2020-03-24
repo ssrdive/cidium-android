@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "agrivest.db";
 
     public static final String CONTRACT_TABLE_NAME = "contract";
@@ -15,6 +15,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String CONTRACT_COLUMN_AGRIVEST = "agrivest";
     public static final String CONTRACT_COLUMN_STATE = "state";
     public static final String CONTRACT_COLUMN_MODEL = "model";
+    public static final String CONTRACT_COLUMN_BATCH = "batch";
     public static final String CONTRACT_COLUMN_CHASSIS_NUMBER = "chassis_number";
     public static final String CONTRACT_COLUMN_CUSTOMER_NAME = "customer_name";
     public static final String CONTRACT_COLUMN_CUSTOMER_ADDRESS = "customer_address";
@@ -23,6 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String CONTRACT_COLUMN_TOTAL_PAYABLE = "total_payable";
     public static final String CONTRACT_COLUMN_TOTAL_AGREEMENT = "total_agreement";
     public static final String CONTRACT_COLUMN_TOTAL_PAID = "total_paid";
+    public static final String CONTRACT_COLUMN_LAST_PAYMENT_DATE = "last_payment_date";
 
     public static final String RECEIPT_TABLE_NAME = "receipt";
     public static final String RECEIPT_COLUMN_ID = "id";
@@ -44,6 +46,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 CONTRACT_COLUMN_AGRIVEST + " TEXT, " +
                 CONTRACT_COLUMN_STATE + " TEXT, " +
                 CONTRACT_COLUMN_MODEL + " TEXT, " +
+                CONTRACT_COLUMN_BATCH + " TEXT, " +
                 CONTRACT_COLUMN_CHASSIS_NUMBER + " TEXT, " +
                 CONTRACT_COLUMN_CUSTOMER_NAME + " TEXT, " +
                 CONTRACT_COLUMN_CUSTOMER_ADDRESS + " TEXT, " +
@@ -51,7 +54,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 CONTRACT_COLUMN_AMOUNT_PENDING + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_PAYABLE + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_AGREEMENT + " TEXT, " +
-                CONTRACT_COLUMN_TOTAL_PAID + " TEXT " + ")");
+                CONTRACT_COLUMN_TOTAL_PAID + " TEXT, " +
+                CONTRACT_COLUMN_LAST_PAYMENT_DATE + " TEXT " + ")");
         db.execSQL("CREATE TABLE " + RECEIPT_TABLE_NAME + "(" +
                 RECEIPT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 RECEIPT_CONTRACT_ID + " INTEGER, " +
