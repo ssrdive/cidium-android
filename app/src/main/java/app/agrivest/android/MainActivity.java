@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.setCancelable(false);
         dialog.show();
 
-        String url = "https://agrivest.app/api/authenticate";
+        String url = new API().getApiLink() + "/authenticate";
 
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

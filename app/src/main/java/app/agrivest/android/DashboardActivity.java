@@ -138,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             if (!isFinishing()) {
                 loadContractsDialog.show();
             }
-            String url = "https://agrivest.app/api/contract/search?search=&state=&officer=" + userDetails.getString("id", "") + "&batch=";
+            String url = new API().getApiLink() + "/contract/search?search=&state=&officer=" + userDetails.getString("id", "") + "&batch=";
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -176,7 +176,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void uploadReceipt(final SQLiteDatabase db, final Cursor res) {
-        String url = "https://agrivest.app/api/contract/receipt";
+        String url = new API().getApiLink() + "/contract/receipt";
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -195,7 +195,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                             Toast.makeText(getApplicationContext(), "Error uploading offline receipts. Please check the amounts and validate with the office", Toast.LENGTH_LONG).show();
                             break;
                         case 400:
-//                            signOut();
+                            signOut();
                             break;
                     }
                     Log.d("STATUS_CODE", String.valueOf(networkResponse.statusCode));

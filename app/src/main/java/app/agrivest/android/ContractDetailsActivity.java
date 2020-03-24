@@ -136,7 +136,7 @@ public class ContractDetailsActivity extends AppCompatActivity {
             loadReceipts.setTitle("Loading receipts");
             loadReceipts.setMessage("Please wait while receipts are loaded");
             loadReceipts.setCancelable(false);
-            String url = "https://agrivest.app/api/contract/receipts/" + id;
+            String url =  new API().getApiLink() + "/contract/receipts/" + id;
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -192,7 +192,7 @@ public class ContractDetailsActivity extends AppCompatActivity {
             loadInstallments.setTitle("Loading Installments");
             loadInstallments.setMessage("Please wait while installments are loaded");
             loadInstallments.setCancelable(false);
-            String url = "https://agrivest.app/api/contract/installments/" + id;
+            String url = new API().getApiLink() + "/contract/installments/" + id;
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {

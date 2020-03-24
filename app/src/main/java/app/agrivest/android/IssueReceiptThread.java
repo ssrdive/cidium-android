@@ -217,7 +217,7 @@ public class IssueReceiptThread implements Runnable {
         userDetails = context.getSharedPreferences("user_details", context.MODE_PRIVATE);
         if (utils.isInternetAvailable(context)) {
             mQueue = Volley.newRequestQueue(context);
-            String url = "https://agrivest.app/api/contract/receipt";
+            String url = new API().getApiLink() + "/contract/receipt";
             StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {

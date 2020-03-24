@@ -85,6 +85,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="15dp"
+                            android:text="Batch" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
                             android:text="Chassis Number" />
 
                         <TextView
@@ -127,6 +133,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="15dp"
                             android:text="Total Paid" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:text="Last Payment Date" />
 
                     </TableRow>
 

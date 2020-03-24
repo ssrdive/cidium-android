@@ -72,7 +72,7 @@ public class IssuedReceiptsActivity extends AppCompatActivity implements View.On
             loadReceipts.setCancelable(false);
             loadReceipts.show();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String url = "https://agrivest.app/api/contract/receipts/officer/" + userDetails.getString("id", "") + "/" + formatter.format(new Date());
+            String url = new API().getApiLink() + "/contract/receipts/officer/" + userDetails.getString("id", "") + "/" + formatter.format(new Date());
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
