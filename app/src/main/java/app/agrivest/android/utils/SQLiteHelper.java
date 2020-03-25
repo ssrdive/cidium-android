@@ -1,4 +1,4 @@
-package app.agrivest.android;
+package app.agrivest.android.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

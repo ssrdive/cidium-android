@@ -13,21 +13,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".IssuedReceiptsActivity" android:parentActivityName=".DashboardActivity"></activity>
+        android:theme="@style/AppThemeNoActionBar">
+        <activity android:name=".activities.IssuedReceiptsActivity"
+            android:parentActivityName=".activities.DashboardActivity" />
         <activity
-            android:name=".OfflineReceiptsActivity"
-            android:parentActivityName=".DashboardActivity" />
+            android:name=".activities.OfflineReceiptsActivity"
+            android:parentActivityName=".activities.DashboardActivity" />
         <activity
-            android:name=".ContractDetailsActivity"
-            android:parentActivityName=".DashboardActivity" />
+            android:name=".activities.ContractDetailsActivity"
+            android:parentActivityName=".activities.DashboardActivity" />
         <activity
-            android:name=".ReceiptActivity"
-            android:parentActivityName=".DashboardActivity" />
+            android:name=".activities.ReceiptActivity"
+            android:parentActivityName=".activities.DashboardActivity" />
         <activity
-            android:name=".DashboardActivity"
+            android:name=".activities.DashboardActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

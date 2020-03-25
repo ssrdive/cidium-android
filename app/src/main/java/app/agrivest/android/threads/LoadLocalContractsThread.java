@@ -1,15 +1,16 @@
-package app.agrivest.android;
+package app.agrivest.android.threads;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Handler;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import java.util.LinkedHashMap;
+
+import app.agrivest.android.utils.RowAdder;
+import app.agrivest.android.utils.SQLiteHelper;
 
 public class LoadLocalContractsThread implements Runnable {
     Thread thrd;
@@ -19,7 +20,7 @@ public class LoadLocalContractsThread implements Runnable {
     ProgressDialog progressDialog;
     RowAdder rowAdder;
 
-    LoadLocalContractsThread(Context context, SQLiteDatabase db, TableLayout table, ProgressDialog progressDialog) {
+    public LoadLocalContractsThread(Context context, SQLiteDatabase db, TableLayout table, ProgressDialog progressDialog) {
         this.context = context;
         this.db = db;
         this.table = table;
