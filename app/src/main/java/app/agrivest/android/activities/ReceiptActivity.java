@@ -1,16 +1,14 @@
-package app.agrivest.android;
+package app.agrivest.android.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,10 +18,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import java.util.HashMap;
 
+import app.agrivest.android.utils.NumberFormatter;
+import app.agrivest.android.R;
+import app.agrivest.android.utils.SQLiteHelper;
+import app.agrivest.android.utils.Utils;
+import app.agrivest.android.threads.IssueReceiptThread;
+
 public class ReceiptActivity extends AppCompatActivity implements View.OnClickListener {
+    private Toolbar toolbar;
+
     private String id;
     private String agrivest;
     private String customer_name;
@@ -59,17 +68,27 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt);
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
-        agrivest = bundle.getString("agrivest");
-        customer_name = bundle.getString("customer_name");
-        customer_address = bundle.getString("customer_address");
-        customer_contact = bundle.getString("customer_contact");
-        chassis_number = bundle.getString("chassis_number");
-        amount_pending = Float.parseFloat(bundle.getString("amount_pending"));
-        total_payable = Float.parseFloat(bundle.getString("total_payable"));
 
-        getSupportActionBar().setTitle("Issue Receipt " + id);
+        SQLiteDatabase db = new SQLiteHelper(this).getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLiteHelper.CONTRACT_TABLE_NAME + " WHERE id = " + id, null);
+        res.moveToFirst();
+
+        agrivest = res.getString(res.getColumnIndex("agrivest"));
+        customer_name = res.getString(res.getColumnIndex("customer_name"));
+        customer_address = res.getString(res.getColumnIndex("customer_address"));
+        customer_contact = res.getString(res.getColumnIndex("customer_contact"));
+        chassis_number = res.getString(res.getColumnIndex("chassis_number"));
+        amount_pending = Float.parseFloat(res.getString(res.getColumnIndex("amount_pending")));
+        total_payable = Float.parseFloat(res.getString(res.getColumnIndex("total_payable")));
+
+        db.close();
+
+        getSupportActionBar().setTitle("Issue Receipt");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         utils = new Utils();
@@ -164,7 +183,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                     printReceiptStatus.show();
                     return;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
                 builder.setTitle(new NumberFormatter().format(amount_ET.getText().toString()));
                 builder.setMessage("Please confirm whether the amount is correct");
                 builder.setIcon(R.drawable.confirmation_icon);

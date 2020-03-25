@@ -1,11 +1,10 @@
-package app.agrivest.android;
+package app.agrivest.android.threads;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.TableLayout;
 
 import org.json.JSONArray;
@@ -16,6 +15,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
+import app.agrivest.android.utils.RowAdder;
+import app.agrivest.android.utils.SQLiteHelper;
+
 public class SetResponseContractsThread implements Runnable {
     Thread thrd;
     Context context;
@@ -25,7 +27,7 @@ public class SetResponseContractsThread implements Runnable {
     ProgressDialog progressDialog;
     RowAdder rowAdder;
 
-    SetResponseContractsThread(Context context, SQLiteDatabase db, String response, TableLayout table, ProgressDialog progressDialog) {
+    public SetResponseContractsThread(Context context, SQLiteDatabase db, String response, TableLayout table, ProgressDialog progressDialog) {
         this.context = context;
         this.db = db;
         this.response = response;

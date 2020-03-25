@@ -1,8 +1,5 @@
-package app.agrivest.android;
+package app.agrivest.android.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,10 +26,13 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import app.agrivest.android.R;
+import app.agrivest.android.utils.Utils;
+import app.agrivest.android.api.API;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private SharedPreferences userDetails;
@@ -126,20 +129,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     JSONObject signinRes = new JSONObject(response);
 
-                        SharedPreferences.Editor userEditor = userDetails.edit();
-                        Iterator<String> signinResIter = signinRes.keys();
+                    SharedPreferences.Editor userEditor = userDetails.edit();
+                    Iterator<String> signinResIter = signinRes.keys();
 
 
-                        while(signinResIter.hasNext()) {
-                            String key = signinResIter.next();
-                                userEditor.putString(key, signinRes.getString(key));
-                        }
+                    while (signinResIter.hasNext()) {
+                        String key = signinResIter.next();
+                        userEditor.putString(key, signinRes.getString(key));
+                    }
 
-                        userEditor.apply();
+                    userEditor.apply();
 
-                        dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-                        startActivity(dashboard);
-                        Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
+                    dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+                    startActivity(dashboard);
+                    Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

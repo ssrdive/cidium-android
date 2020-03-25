@@ -1,4 +1,4 @@
-package app.agrivest.android;
+package app.agrivest.android.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -10,7 +10,7 @@ public class Utils {
 
     Calendar calendar;
 
-    Utils() {
+    public Utils() {
         calendar = Calendar.getInstance();
     }
 

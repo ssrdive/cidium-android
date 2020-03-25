@@ -1,6 +1,4 @@
-package app.agrivest.android;
-
-import androidx.appcompat.app.AppCompatActivity;
+package app.agrivest.android.activities;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,9 +8,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.LinkedHashMap;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import app.agrivest.android.R;
+import app.agrivest.android.utils.SQLiteHelper;
 
 public class OfflineReceiptsActivity extends AppCompatActivity {
+    private Toolbar toolbar;
 
     TableLayout offline_receipts_TL;
 
@@ -20,6 +23,9 @@ public class OfflineReceiptsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_receipts);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("Offline Receipts");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -31,7 +37,7 @@ public class OfflineReceiptsActivity extends AppCompatActivity {
         res.moveToFirst();
         while (res.isAfterLast() == false) {
             TableRow receiptRow = new TableRow(this);
-            receiptRow.setBackgroundColor(Color.parseColor("#d5f0dc"));
+            receiptRow.setBackgroundColor(Color.parseColor("#f2eded"));
             receiptRow.setPadding(5, 5, 5, 5);
             for (final String column : res.getColumnNames()) {
                 TextView textView = new TextView(this);
