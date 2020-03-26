@@ -143,7 +143,7 @@ public class ContractsFragment extends Fragment implements View.OnClickListener 
             loadContractsDialog.setMessage("Please wait while contracts are loaded");
             loadContractsDialog.setCancelable(false);
             loadContractsDialog.show();
-            String url = new API().getApiLink() + "/contract/search?search=&state=&officer=" + userDetails.getString("id", "") + "&batch=";
+            String url = new API().getApiLink() + "/contract/searchnew?search=&state=&officer=" + userDetails.getString("id", "") + "&batch=";
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
