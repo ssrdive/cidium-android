@@ -37,11 +37,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -67,11 +63,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -97,11 +89,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -127,11 +115,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -157,11 +141,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -188,11 +168,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -218,11 +194,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#c0c0c0" />
+                style="@style/ViewSeparator" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
