@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,6 +43,7 @@ import app.agrivest.android.activities.MainActivity;
 import app.agrivest.android.api.API;
 import app.agrivest.android.threads.LoadLocalContractsThread;
 import app.agrivest.android.threads.SetResponseContractsThread;
+import app.agrivest.android.utils.NumberFormatter;
 import app.agrivest.android.utils.SQLiteHelper;
 import app.agrivest.android.utils.Utils;
 
@@ -54,9 +59,13 @@ public class ContractsFragment extends Fragment implements View.OnClickListener 
     private RequestQueue mQueue;
 
     private Button refresh_contracts_BT;
+    private Button search_BT;
 
     private TextView network_status_message;
     private TextView last_updated_message;
+    private TextView seasonal_incentive;
+
+    private EditText search_ET;
 
     private TableLayout contracts_TL;
 
@@ -84,12 +93,53 @@ public class ContractsFragment extends Fragment implements View.OnClickListener 
         refresh_contracts_BT = contracts.findViewById(R.id.refresh_contracts_BT);
         refresh_contracts_BT.setOnClickListener(this);
 
+        search_ET = contracts.findViewById(R.id.search_ET);
+
+        search_BT = contracts.findViewById(R.id.search_BT);
+        search_BT.setOnClickListener(this);
+
         setNetworkStatusMessage();
         lastUpdated();
+        setSeasonalIncentive();
         loadContracts();
         uploadOfflineReceipts();
 
         return contracts;
+    }
+
+    private void setSeasonalIncentive() {
+        seasonal_incentive = contracts.findViewById(R.id.seasonal_incentive);
+        connected = utils.isInternetAvailable(getActivity());
+
+        if(connected) {
+            String url = new API().getApiLink() + "/seasonalincentive/" + userDetails.getString("id", "");
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject incentive = new JSONObject(response);
+                        seasonal_incentive.setText("LKR " + new NumberFormatter().format(incentive.getString("amount")));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    seasonal_incentive.setText("<Error>");
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Authorization", "Bearer " + userDetails.getString("token", ""));
+                    params.put("Content-Type", "application/x-www-form-urlencoded");
+                    return params;
+                }
+            };
+            request.setRetryPolicy(new DefaultRetryPolicy(10000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            mQueue.add(request);
+        }
     }
 
     private void setNetworkStatusMessage() {
@@ -176,7 +226,7 @@ public class ContractsFragment extends Fragment implements View.OnClickListener 
             loadContractsDialog.setMessage("Please wait while contracts are loaded");
             loadContractsDialog.setCancelable(false);
             loadContractsDialog.show();
-            LoadLocalContractsThread loadLocalContractsThread = new LoadLocalContractsThread(getActivity(), db, contracts_TL, loadContractsDialog);
+            LoadLocalContractsThread loadLocalContractsThread = new LoadLocalContractsThread(getActivity(), db, contracts_TL, loadContractsDialog, "");
         }
     }
 
@@ -248,8 +298,22 @@ public class ContractsFragment extends Fragment implements View.OnClickListener 
                     Toast.makeText(getActivity(), "You are offline", Toast.LENGTH_LONG).show();
                 } else {
                     setNetworkStatusMessage();
+                    setSeasonalIncentive();
                     loadContracts();
                 }
+                break;
+            case R.id.search_BT:
+                contracts_TL = contracts.findViewById(R.id.contracts_TL);
+
+                while (contracts_TL.getChildCount() > 1)
+                    contracts_TL.removeView(contracts_TL.getChildAt(contracts_TL.getChildCount() - 1));
+
+                final SQLiteDatabase db = new SQLiteHelper(getActivity()).getReadableDatabase();
+                loadContractsDialog.setTitle("Searching Contracts From Cache");
+                loadContractsDialog.setMessage("Please wait while contracts are loaded");
+                loadContractsDialog.setCancelable(false);
+                loadContractsDialog.show();
+                LoadLocalContractsThread loadLocalContractsThread = new LoadLocalContractsThread(getActivity(), db, contracts_TL, loadContractsDialog, search_ET.getText().toString());
                 break;
         }
     }

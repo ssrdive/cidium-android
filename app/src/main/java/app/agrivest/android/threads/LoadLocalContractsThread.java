@@ -18,13 +18,15 @@ public class LoadLocalContractsThread implements Runnable {
     SQLiteDatabase db;
     TableLayout table;
     ProgressDialog progressDialog;
+    String keyword;
     RowAdder rowAdder;
 
-    public LoadLocalContractsThread(Context context, SQLiteDatabase db, TableLayout table, ProgressDialog progressDialog) {
+    public LoadLocalContractsThread(Context context, SQLiteDatabase db, TableLayout table, ProgressDialog progressDialog, String keyword) {
         this.context = context;
         this.db = db;
         this.table = table;
         this.progressDialog = progressDialog;
+        this.keyword = keyword;
         rowAdder = new RowAdder(this.context);
         thrd = new Thread(this);
         thrd.start();
@@ -33,7 +35,7 @@ public class LoadLocalContractsThread implements Runnable {
     @Override
     public void run() {
         Handler mainHandler = new Handler(context.getMainLooper());
-        Cursor res = db.rawQuery("SELECT * FROM " + SQLiteHelper.CONTRACT_TABLE_NAME, null);
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLiteHelper.CONTRACT_TABLE_NAME + " WHERE id || batch || chassis_number || customer_name || customer_address LIKE \'%" + keyword + "%\';", null);
         res.moveToFirst();
         while (res.isAfterLast() == false) {
             final LinkedHashMap<String, String> contractMap = new LinkedHashMap<String, String>();
