@@ -34,7 +34,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String RECEIPT_AMOUNT = "amount";
     public static final String RECEIPT_PAYMENT_TYPE = "payment_type";
     public static final String RECEIPT_DUE_DATE = "due_date";
-	public static final String RECEIPT_CHECKSUM = "checksum";
 
     public SQLiteHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -64,8 +63,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 RECEIPT_USER_ID + " INTEGER, " +
                 RECEIPT_AMOUNT + " INTEGER, " +
                 RECEIPT_PAYMENT_TYPE + " TEXT, " +
-                RECEIPT_DUE_DATE + " TEXT, " +
-                RECEIPT_CHECKSUM + " TEXT " + ")");
+                RECEIPT_DUE_DATE + " TEXT " + ")");
     }
 
     @Override

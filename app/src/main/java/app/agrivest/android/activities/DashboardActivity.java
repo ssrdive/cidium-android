@@ -191,7 +191,6 @@ public class DashboardActivity extends AppCompatActivity {
                 } else {
                     params.put("due_date", res.getString(res.getColumnIndex("due_date")));
                 }
-				params.put("checksum", res.getString(res.getColumnIndex("checksum")));
                 return params;
             }
 
