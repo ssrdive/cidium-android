@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 import app.agrivest.android.utils.NumberFormatter;
@@ -207,6 +208,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                         receiptDetails.put("amount", amount);
                         receiptDetails.put("due_date", due_date);
                         receiptDetails.put("payment_type", paymentType);
+                        receiptDetails.put("checksum", convertStringToHex(id));
                         IssueReceiptThread issueReceiptThread = new IssueReceiptThread(ReceiptActivity.this, loadContractsDialog, receiptDetails);
                     }
                 });
@@ -219,5 +221,28 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                 alert.show();
                 break;
         }
+    }
+
+    private String convertStringToHex(String id) {
+
+        String checkValue = (new Timestamp(System.currentTimeMillis())).toString() + "_555" +id;
+        System.out.println("checkValue: " + id +" ,  "+checkValue);
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder2 = new StringBuilder();
+
+        char[] charArray = checkValue.toCharArray();
+
+        for (char c : charArray) {
+            String charToHex = Integer.toHexString(c);
+            String charToHex2 = Integer.toHexString(c);
+            stringBuilder.append(charToHex);
+            stringBuilder2.append(charToHex);
+        }
+
+        System.out.println("Converted Hex from String1: " + id +" ,  "+stringBuilder.toString());
+        System.out.println("Converted Hex from String2: " + id +" ,  "+stringBuilder2.toString());
+
+
+        return stringBuilder.toString();
     }
 }

@@ -248,6 +248,7 @@ public class IssueReceiptThread implements Runnable {
                     } else {
                         params.put("due_date", receiptDetails.get("due_date"));
                     }
+                    params.put("checksum", receiptDetails.get("checksum"));
                     return params;
                 }
 
@@ -275,6 +276,7 @@ public class IssueReceiptThread implements Runnable {
         receiptValues.put(SQLiteHelper.RECEIPT_AMOUNT, receiptDetails.get("amount"));
         receiptValues.put(SQLiteHelper.RECEIPT_PAYMENT_TYPE, receiptDetails.get("payment_type"));
         receiptValues.put(SQLiteHelper.RECEIPT_DUE_DATE, receiptDetails.get("due_date"));
+        receiptValues.put(SQLiteHelper.RECEIPT_CHECKSUM, receiptDetails.get("checksum"));
         long id = db.insert(SQLiteHelper.RECEIPT_TABLE_NAME, null, receiptValues);
         if (id != -1) {
             showMessage(
