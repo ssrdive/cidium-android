@@ -65,7 +65,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 RECEIPT_AMOUNT + " INTEGER, " +
                 RECEIPT_PAYMENT_TYPE + " TEXT, " +
                 RECEIPT_DUE_DATE + " TEXT, " +
-                RECEIPT_CHECKSUM + "TEXT " + ")");
+                RECEIPT_CHECKSUM + " TEXT " + ")");
     }
 
     @Override

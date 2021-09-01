@@ -176,32 +176,32 @@ public class IssueReceiptThread implements Runnable {
                         "027 222 22279\n";
             }
 
-            posPrinter.printBitmap(buffer.getInt(0), logo, 200, POSPrinterConst.PTR_BM_CENTER);
+//            posPrinter.printBitmap(buffer.getInt(0), logo, 200, POSPrinterConst.PTR_BM_CENTER);
             String ESCAPE_CHARACTERS = new String(new byte[]{0x1b, 0x7c});
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + address);
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + address);
             NumberFormatter numberFormatter = new NumberFormatter();
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
-                    + "________________________________\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "bC" + ESCAPE_CHARACTERS + "cA" + "OFFICIAL RECEIPT" + "\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
-                    + java.text.DateFormat.getDateTimeInstance().format(new Date()) + "\n"
-                    + "C/ID: " + receiptDetails.get("id") + "\n"
-                    + receiptDetails.get("customer_name") + " (" + receiptDetails.get("customer_contact") + ")" + "\n"
-                    + "Chassis: " + receiptDetails.get("chassis_number") + "\n"
-                    + "Total Payable: RS. "
-                    + numberFormatter.format(receiptDetails.get("total_payable")) + "\n"
-                    + "Arrears: RS. "
-                    + numberFormatter.format(receiptDetails.get("amount_pending")) + "\n\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Recieved sum of" + "\n");
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
+//                    + "________________________________\n\n");
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "bC" + ESCAPE_CHARACTERS + "cA" + "OFFICIAL RECEIPT" + "\n\n");
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
+//                    + java.text.DateFormat.getDateTimeInstance().format(new Date()) + "\n"
+//                    + "C/ID: " + receiptDetails.get("id") + "\n"
+//                    + receiptDetails.get("customer_name") + " (" + receiptDetails.get("customer_contact") + ")" + "\n"
+//                    + "Chassis: " + receiptDetails.get("chassis_number") + "\n"
+//                    + "Total Payable: RS. "
+//                    + numberFormatter.format(receiptDetails.get("total_payable")) + "\n"
+//                    + "Arrears: RS. "
+//                    + numberFormatter.format(receiptDetails.get("amount_pending")) + "\n\n");
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Recieved sum of" + "\n");
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "4C" + ESCAPE_CHARACTERS + "cA" + "RS " + numberFormatter.format(receiptDetails.get("amount")) + "\n");
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Thank You!" + "\n\n");
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "Thank You!" + "\n\n");
             ByteBuffer buffer2 = ByteBuffer.allocate(4);
             buffer2.put((byte) POSPrinterConst.PTR_S_RECEIPT);
             buffer2.put((byte) 20);
             buffer2.put((byte) 0x01);
             buffer2.put((byte) 0x00);
-            posPrinter.printBitmap(buffer2.getInt(0), payment_confirmation_customer_information, 384, POSPrinterConst.PTR_BM_CENTER);
-            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, "\n\n\n");
+//            posPrinter.printBitmap(buffer2.getInt(0), payment_confirmation_customer_information, 384, POSPrinterConst.PTR_BM_CENTER);
+//            posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, "\n\n\n");
             posPrinter.close();
         } catch (JposException e) {
             e.printStackTrace();
