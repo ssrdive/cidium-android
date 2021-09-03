@@ -22,6 +22,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import app.agrivest.android.utils.NumberFormatter;
@@ -207,6 +209,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                         receiptDetails.put("amount", amount);
                         receiptDetails.put("due_date", due_date);
                         receiptDetails.put("payment_type", paymentType);
+                        receiptDetails.put("checksum", generateChecksum(id));
                         IssueReceiptThread issueReceiptThread = new IssueReceiptThread(ReceiptActivity.this, loadContractsDialog, receiptDetails);
                     }
                 });
@@ -219,5 +222,11 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
                 alert.show();
                 break;
         }
+    }
+
+    private String generateChecksum(String id) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        return formatter.format(date)+ id;
     }
 }
