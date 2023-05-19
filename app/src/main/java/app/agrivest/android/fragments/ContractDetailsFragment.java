@@ -35,6 +35,7 @@ public class ContractDetailsFragment extends Fragment {
     MaterialButton total_payable_TV;
     TextView chassis_number_TV;
     TextView contact_TV;
+    TextView default_charges_TV;
 
     public ContractDetailsFragment() {
         // Required empty public constructor
@@ -60,6 +61,7 @@ public class ContractDetailsFragment extends Fragment {
         final String chassis_number = res.getString(res.getColumnIndex("chassis_number"));
         final String amount_pending = res.getString(res.getColumnIndex("amount_pending"));
         final String total_payable = res.getString(res.getColumnIndex("total_payable"));
+        final String default_charges = res.getString(res.getColumnIndex("default_charges"));
 
         db.close();
 
@@ -71,6 +73,7 @@ public class ContractDetailsFragment extends Fragment {
         chassis_number_TV = contractDetails.findViewById(R.id.chassis_number_TV);
         amount_pending_TV = contractDetails.findViewById(R.id.amount_pending_TV);
         total_payable_TV = contractDetails.findViewById(R.id.total_payable_TV);
+        default_charges_TV = contractDetails.findViewById(R.id.default_charges_TV);
 
         total_payable_TV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +100,13 @@ public class ContractDetailsFragment extends Fragment {
             amount_pending_TV.setTextColor(Color.parseColor("#196912"));
         }
         total_payable_TV.setText(formatter.format(total_payable));
+
+        default_charges_TV.setText(formatter.format(default_charges));
+        if (Float.parseFloat(default_charges) > 0) {
+            default_charges_TV.setTextColor(Color.parseColor("#b03428"));
+        } else {
+            default_charges_TV.setTextColor(Color.parseColor("#196912"));
+        }
 
         contact_TV.setText(customer_contact);
         contact_TV.setClickable(true);

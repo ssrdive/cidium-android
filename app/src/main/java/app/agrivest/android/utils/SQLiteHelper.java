@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 12;
     public static final String DATABASE_NAME = "agrivest.db";
 
     public static final String CONTRACT_TABLE_NAME = "contract";
@@ -22,6 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String CONTRACT_COLUMN_CUSTOMER_CONTACT = "customer_contact";
     public static final String CONTRACT_COLUMN_AMOUNT_PENDING = "amount_pending";
     public static final String CONTRACT_COLUMN_TOTAL_PAYABLE = "total_payable";
+    public static final String CONTRACT_COLUMN_DEFAULT_CHARGES = "default_charges";
     public static final String CONTRACT_COLUMN_TOTAL_AGREEMENT = "total_agreement";
     public static final String CONTRACT_COLUMN_TOTAL_PAID = "total_paid";
     public static final String CONTRACT_COLUMN_LAST_PAYMENT_DATE = "last_payment_date";
@@ -54,6 +55,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 CONTRACT_COLUMN_CUSTOMER_CONTACT + " TEXT, " +
                 CONTRACT_COLUMN_AMOUNT_PENDING + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_PAYABLE + " TEXT, " +
+                CONTRACT_COLUMN_DEFAULT_CHARGES + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_AGREEMENT + " TEXT, " +
                 CONTRACT_COLUMN_TOTAL_PAID + " TEXT, " +
                 CONTRACT_COLUMN_LAST_PAYMENT_DATE + " TEXT " + ")");

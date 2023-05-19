@@ -200,6 +200,36 @@
                 android:layout_marginBottom="5dp"
                 android:background="#c0c0c0" />
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:text="Default Charges"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/default_charges_TV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#c0c0c0" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

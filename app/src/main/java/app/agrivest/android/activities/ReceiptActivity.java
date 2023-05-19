@@ -43,6 +43,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
     private String chassis_number;
     private float amount_pending;
     private float total_payable;
+    private float default_charges;
 
     private TextView id_TV;
     private TextView customer_name_TV;
@@ -50,6 +51,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
     private TextView chassis_number_TV;
     private TextView amount_pending_TV;
     private TextView total_payable_TV;
+    private TextView default_charges_TV;
 
     private EditText amount_ET;
     private EditText due_date_ET;
@@ -87,6 +89,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
         chassis_number = res.getString(res.getColumnIndex("chassis_number"));
         amount_pending = Float.parseFloat(res.getString(res.getColumnIndex("amount_pending")));
         total_payable = Float.parseFloat(res.getString(res.getColumnIndex("total_payable")));
+        default_charges = Float.parseFloat(res.getString(res.getColumnIndex("default_charges")));
 
         db.close();
 
@@ -101,6 +104,7 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
         chassis_number_TV = findViewById(R.id.chassis_number_TV);
         amount_pending_TV = findViewById(R.id.amount_pending_TV);
         total_payable_TV = findViewById(R.id.total_payable_TV);
+        default_charges_TV = findViewById(R.id.default_charges_TV);
         due_date_ET = findViewById(R.id.due_date_ET);
         due_date_ET.setEnabled(false);
         due_date_ET.setInputType(InputType.TYPE_NULL);
@@ -142,6 +146,12 @@ public class ReceiptActivity extends AppCompatActivity implements View.OnClickLi
         }
         amount_pending_TV.setTypeface(null, Typeface.BOLD);
         total_payable_TV.setText(formatter.format(total_payable));
+        default_charges_TV.setText(formatter.format(default_charges));
+        if (default_charges > 0) {
+            default_charges_TV.setTextColor(Color.parseColor("#b03428"));
+        } else {
+            default_charges_TV.setTextColor(Color.parseColor("#196912"));
+        }
 
         issue_receipt_BT = findViewById(R.id.issue_receipt_BT);
         issue_receipt_BT.setOnClickListener(this);

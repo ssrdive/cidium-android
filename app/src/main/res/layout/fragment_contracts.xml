@@ -179,6 +179,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="15dp"
+                            android:text="Default Charges"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
                             android:text="Total Agreement"
                             android:textStyle="bold"/>
 

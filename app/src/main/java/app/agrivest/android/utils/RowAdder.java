@@ -38,7 +38,11 @@ public class RowAdder {
             TextView textView = new TextView(context);
             String columnValue = contractColumn.getValue().toString();
 
-            if (contractColumn.getKey().equals("amount_pending") || contractColumn.getKey().equals("total_payable") || contractColumn.getKey().equals("total_agreement") || contractColumn.getKey().equals("total_paid")) {
+            if (contractColumn.getKey().equals("amount_pending")
+                    || contractColumn.getKey().equals("total_payable")
+                    || contractColumn.getKey().equals("default_charges")
+                    || contractColumn.getKey().equals("total_agreement")
+                    || contractColumn.getKey().equals("total_paid")) {
                 double amount = Double.parseDouble(contractColumn.getValue().toString());
                 NumberFormatter formatter = new NumberFormatter();
 
@@ -46,6 +50,15 @@ public class RowAdder {
             }
 
             if (contractColumn.getKey().equals("amount_pending")) {
+                textView.setTypeface(null, Typeface.BOLD);
+                if (Float.parseFloat(contractColumn.getValue().toString()) > 0) {
+                    textView.setTextColor(Color.parseColor("#b03428"));
+                } else {
+                    textView.setTextColor(Color.parseColor("#196912"));
+                }
+            }
+
+            if (contractColumn.getKey().equals("default_charges")) {
                 textView.setTypeface(null, Typeface.BOLD);
                 if (Float.parseFloat(contractColumn.getValue().toString()) > 0) {
                     textView.setTextColor(Color.parseColor("#b03428"));
