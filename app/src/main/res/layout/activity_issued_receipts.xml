@@ -27,6 +27,16 @@
                 android:layout_marginBottom="20dp"
                 android:text="Print Summary" />
 
+            <TextView
+                android:id="@+id/total_collection_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:paddingBottom="10dp"
+                android:text="Rs. 0.00" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -48,6 +58,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="15dp"
                             android:text="ID" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:text="Contract ID" />
 
                         <TextView
                             android:layout_width="match_parent"

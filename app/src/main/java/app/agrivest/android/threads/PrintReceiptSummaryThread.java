@@ -169,7 +169,7 @@ public class PrintReceiptSummaryThread implements Runnable {
             String ESCAPE_CHARACTERS = new String(new byte[]{0x1b, 0x7c});
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA" + "\nAgrivest (Private) Limited\n" +
                     "Hospital Junction, Polonnaruwa\n " +
-                    "027 222 22279\n");
+                    "027 222 2279\n");
             NumberFormatter numberFormatter = new NumberFormatter();
             posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
                     + "________________________________\n\n");

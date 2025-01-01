@@ -167,13 +167,13 @@ public class IssueReceiptThread implements Runnable {
 
             String address = "\nAgrivest (Private) Limited\n" +
                     "Hospital Junction, Polonnaruwa\n " +
-                    "027 222 22279\n";
+                    "027 222 2279\n";
 
             if (receiptDetails.get("agrivest").equals("0")) {
                 logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.randeepa_logo);
                 address = "\nRandeepa Agrarian (Pvt) Limited\n" +
                         "Sirisangabo Place, Polonnaruwa\n " +
-                        "027 222 22279\n";
+                        "027 222 2279\n";
             }
 
             posPrinter.printBitmap(buffer.getInt(0), logo, 200, POSPrinterConst.PTR_BM_CENTER);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import app.agrivest.android.R;
+import app.agrivest.android.utils.NumberFormatter;
 import app.agrivest.android.utils.RowAdder;
 import app.agrivest.android.utils.Utils;
 import app.agrivest.android.api.API;
@@ -51,12 +53,18 @@ public class IssuedReceiptsActivity extends AppCompatActivity implements View.On
     TableLayout receiptsTable;
     Button print_summary_BT;
 
+    TextView totalCollectionTextView;
+
+    float totalCollection = 0f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_issued_receipts);
 
         toolbar = findViewById(R.id.toolbar);
+        totalCollectionTextView = findViewById(R.id.total_collection_TV);
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("Issued Receipts");
@@ -97,13 +105,18 @@ public class IssuedReceiptsActivity extends AppCompatActivity implements View.On
                                 if (!Arrays.asList(tableExp).contains(key)) {
                                     if (key.equals("notes")) {
                                         contractMap.put(key, new JSONObject(receipt.getString(key)).getString("String"));
-                                    } else {
+                                    } else if (key.equals("amount")) {
+                                        totalCollection += Float.parseFloat(receipt.getString(key));
+                                        contractMap.put(key, receipt.getString(key));
+                                    }
+                                    else {
                                         contractMap.put(key, receipt.getString(key));
                                     }
                                 }
                             }
                             rowAdder.receipt(receiptsTable, contractMap);
                         }
+                        totalCollectionTextView.setText("Rs. " + new NumberFormatter().format(Double.parseDouble(String.valueOf(totalCollection))));
                         loadReceipts.dismiss();
                     } catch (JSONException e) {
                         loadReceipts.dismiss();
