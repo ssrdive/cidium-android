@@ -77,15 +77,15 @@ public class PrintReceiptSummaryThread implements Runnable {
     public void run() {
         mainHandler = new Handler(context.getMainLooper());
 
-        if(receipts == null || receipts.length() == 0) {
-            progressDialog.dismiss();
-            showMessage(
-                    "Failure",
-                    "No receipts issued",
-                    "You do not have any receipts issued today."
-            );
-            return;
-        }
+//        if(receipts == null || receipts.length() == 0) {
+//            progressDialog.dismiss();
+//            showMessage(
+//                    "Failure",
+//                    "No receipts issued",
+//                    "You do not have any receipts issued today."
+//            );
+//            return;
+//        }
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> bondedDeviceSet = bluetoothAdapter.getBondedDevices();
@@ -179,12 +179,14 @@ public class PrintReceiptSummaryThread implements Runnable {
 
             try {
                 double total = 0;
-                for (int i = 0; i < receipts.length(); i++) {
-                    JSONObject receipt = receipts.getJSONObject(i);
-                    float amount = Float.parseFloat(receipt.getString("amount"));
-                    total += amount;
-                    posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
-                            + receipt.getString("id") + "\tRS. " + numberFormatter.format(amount) + "\n");
+                if (receipts != null && receipts.length() != 0) {
+                    for (int i = 0; i < receipts.length(); i++) {
+                        JSONObject receipt = receipts.getJSONObject(i);
+                        float amount = Float.parseFloat(receipt.getString("amount"));
+                        total += amount;
+                        posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "lA" + ESCAPE_CHARACTERS + "N"
+                                + receipt.getString("id") + "\tRS. " + numberFormatter.format(amount) + "\n");
+                    }
                 }
                 posPrinter.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESCAPE_CHARACTERS + "N" + ESCAPE_CHARACTERS + "cA"
                         + "\nTotal\n");
